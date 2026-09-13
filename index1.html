@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perjalanan Menuju Keyakinan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      background: #FDF8F3;
+      font-family: 'Nunito', 'Quicksand', sans-serif;
+      color: #4A4A4A;
+      overflow-x: hidden;
+    }
+    
+    #book-root {
+      width: 100%;
+      height: 100vh;
+      background: #FDF8F3;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+    
+    /* Floating Decorative Elements */
+    .float-el {
+      position: absolute;
+      pointer-events: none;
+    }
+    
+    /* Progress Bar */
+    .progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: #F0EAE3;
+      z-index: 100;
+      border-radius: 0 0 8px 8px;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #D4A5A5, #9CAFAA, #B8C5D6);
+      border-radius: 0 0 8px 8px;
+      transition: width 0.3s;
+    }
+    
+    /* Bottom Floating Nav */
+    .bottom-nav {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      border-radius: 50px;
+      padding: 8px 16px;
+      display: flex;
+      gap: 8px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      border: 1px solid rgba(212,165,165,0.2);
+    }
+    
+    .nav-pill {
+      padding: 8px 20px;
+      border-radius: 50px;
+      border: none;
+      background: transparent;
+      color: #9CAFAA;
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .nav-pill.active {
+      background: #D4A5A5 !important;
+      color: #fff !important;
+    }
+    
+    .nav-pill:hover {
+      background: rgba(212,165,165,0.15);
+    }
+    
+    /* Sections */
+    section {
+      min-height: 100vh;
+      padding: 80px 20px 120px;
+      position: relative;
+    }
+    
+    .hero {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px 20px;
+      background: #FDF8F3;
+      overflow: hidden;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+      animation: fadeInUp 1s ease;
+    }
+    
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      color: #5C5C5C;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    
+    .hero p {
+      color: #9A9A9A;
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 40px;
+    }
+    
+    .badge {
+      display: inline-block;
+      background: #F0EAE3;
+      padding: 6px 20px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+    }
+    
+    .badge span {
+      color: #9CAFAA;
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      font-weight: 700;
+    }
+    
+    .btn-pink {
+      background: #D4A5A5;
+      border: none;
+      color: #fff;
+      padding: 14px 36px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: inherit;
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(212,165,165,0.3);
+    }
+    
+    .btn-pink:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(212,165,165,0.4);
+    }
+    
+    .btn-green {
+      background: #9CAFAA;
+      border: none;
+      color: #fff;
+      padding: 14px 32px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: inherit;
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(156,175,170,0.3);
+    }
+    
+    .btn-green:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(156,175,170,0.4);
+    }
+    
+    .btn-cream {
+      background: #E8D5C4;
+      border: none;
+      color: #8B7355;
+      padding: 14px 32px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: inherit;
+      border-radius: 50px;
+      box-shadow: 0 4px 15px rgba(232,213,196,0.3);
+    }
+    
+    .btn-cream:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(232,213,196,0.4);
+    }
+    
+    .scroll-indicator {
+      position: absolute;
+      bottom: 80px;
+      animation: gentleBounce 2s ease-in-out infinite;
+    }
+    
+    /* Chapter Styles */
+    .chapter {
+      background: #F5F0EB;
+    }
+    
+    .chapter-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    
+    .chapter-badge {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+    }
+    
+    .chapter-badge.brown {
+      background: #E8D5C4;
+    }
+    
+    .chapter-badge.brown span {
+      color: #8B7355;
+    }
+    
+    .chapter-badge.green {
+      background: #D4E0D9;
+    }
+    
+    .chapter-badge.green span {
+      color: #6B8A7A;
+    }
+    
+    .chapter-badge span {
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      font-weight: 700;
+    }
+    
+    .chapter-title {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: #5C5C5C;
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.5px;
+    }
+    
+    .content-wrapper {
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .content-card {
+      margin-bottom: 32px;
+      background: #fff;
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+      transition: all 0.3s;
+    }
+    
+    .content-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+    
+    .content-card p {
+      color: #5A5A5A;
+      font-size: 1.05rem;
+      line-height: 1.9;
+      text-align: justify;
+      margin: 0;
+      font-weight: 500;
+    }
+    
+    .content-card strong {
+      color: #5C5C5C;
+    }
+    
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .card-icon.rose {
+      background: #F0EAE3;
+    }
+    
+    .card-icon.sage {
+      background: #E8F0EE;
+    }
+    
+    .card-icon.blue {
+      background: #E8ECF2;
+    }
+    
+    .card-icon.lavender {
+      background: #F0ECF5;
+    }
+    
+    /* Pull Quote */
+    .pull-quote {
+      background: linear-gradient(135deg, #E8D5C4, #F0EAE3);
+      border-radius: 28px;
+      padding: 40px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin: 48px 0;
+    }
+    
+    .pull-quote p {
+      color: #5C5C5C;
+      font-size: 1.4rem;
+      font-weight: 700;
+      font-style: italic;
+      line-height: 1.6;
+      margin: 0;
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Question Block */
+    .question-block {
+      background: #fff;
+      border: 2px dashed;
+      border-radius: 24px;
+      padding: 32px;
+      text-align: center;
+      position: relative;
+      margin: 48px 0;
+    }
+    
+    .question-block.rose {
+      border-color: #D4A5A5;
+    }
+    
+    .question-block.green {
+      border-color: #9CAFAA;
+    }
+    
+    .question-tag {
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #fff;
+      padding: 6px 20px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    
+    .question-tag.rose {
+      background: #D4A5A5;
+    }
+    
+    .question-tag.green {
+      background: #9CAFAA;
+    }
+    
+    .question-block p {
+      color: #5C5C5C;
+      font-size: 1.15rem;
+      line-height: 1.9;
+      margin: 12px 0 0;
+      font-weight: 600;
+    }
+    
+    .question-block.center p {
+      font-size: 1.2rem;
+      font-style: italic;
+    }
+    
+    /* Insight Card */
+    .insight-card {
+      border-radius: 28px;
+      padding: 36px;
+      position: relative;
+      overflow: hidden;
+      margin: 48px 0;
+    }
+    
+    .insight-card.green-gradient {
+      background: linear-gradient(135deg, #9CAFAA, #B8C5D6);
+      box-shadow: 0 8px 30px rgba(156,175,170,0.25);
+    }
+    
+    .insight-card.purple-gradient {
+      background: linear-gradient(135deg, #C9B8D9, #D4A5A5);
+      box-shadow: 0 8px 30px rgba(201,184,217,0.25);
+    }
+    
+    .insight-card p {
+      color: #fff;
+      font-size: 1.15rem;
+      line-height: 1.9;
+      margin: 0;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .insight-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .insight-label span {
+      color: #fff;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+    
+    /* Contrast Cards */
+    .contrast-cards {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 48px 0;
+    }
+    
+    .card {
+      flex: 1;
+      min-width: 200px;
+      border-radius: 24px;
+      padding: 28px;
+      transition: all 0.3s;
+      text-align: center;
+    }
+    
+    .card-light {
+      background: #fff;
+      border: 2px solid #E8D5C4;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    
+    .card-light:hover {
+      transform: scale(1.03) rotate(-1deg);
+    }
+    
+    .card-light p {
+      color: #7A7A7A;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+    
+    .card-gradient {
+      background: linear-gradient(135deg, #9CAFAA, #B8C5D6);
+      box-shadow: 0 4px 15px rgba(156,175,170,0.2);
+    }
+    
+    .card-gradient:hover {
+      transform: scale(1.03) rotate(1deg);
+    }
+    
+    .card-gradient p {
+      color: #fff;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 0;
+      font-weight: 500;
+    }
+    
+    .card-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    
+    .card-icon-box.light {
+      background: #F0EAE3;
+    }
+    
+    .card-icon-box.gradient {
+      background: rgba(255,255,255,0.2);
+    }
+    
+    .card-label {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    
+    .card-label.rose {
+      color: #D4A5A5;
+    }
+    
+    .card-label.white {
+      color: #fff;
+      opacity: 0.9;
+    }
+    
+    /* Key Insight */
+    .key-insight {
+      background: #fff;
+      border-radius: 28px;
+      padding: 36px;
+      border-left: 6px solid #D4A5A5;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+      position: relative;
+      overflow: hidden;
+      margin: 48px 0;
+    }
+    
+    .key-insight p {
+      color: #5C5C5C;
+      font-size: 1.1rem;
+      line-height: 1.9;
+      margin: 0;
+      font-weight: 600;
+    }
+    
+    .key-insight-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .key-insight-header span {
+      color: #D4A5A5;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      font-weight: 700;
+    }
+    
+    /* Reflection */
+    .reflection {
+      text-align: center;
+      padding: 36px 28px;
+      border-radius: 24px;
+      position: relative;
+      margin: 48px 0 40px;
+    }
+    
+    .reflection.rose {
+      background: #FDF8F3;
+      border: 2px solid #E8D5C4;
+    }
+    
+    .reflection.green {
+      background: #FDF8F3;
+      border: 2px solid #D4E0D9;
+    }
+    
+    .reflection-tag {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 16px;
+      border-radius: 50px;
+    }
+    
+    .reflection-tag.rose {
+      background: #E8D5C4;
+    }
+    
+    .reflection-tag.rose span {
+      color: #8B7355;
+    }
+    
+    .reflection-tag.green {
+      background: #D4E0D9;
+    }
+    
+    .reflection-tag.green span {
+      color: #6B8A7A;
+    }
+    
+    .reflection-tag span {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+    }
+    
+    .reflection p {
+      color: #5C5C5C;
+      font-size: 1.15rem;
+      line-height: 2;
+      font-style: italic;
+      margin: 8px 0 0;
+      font-weight: 600;
+    }
+    
+    /* Chapter End */
+    .chapter-end {
+      text-align: center;
+      margin-top: 60px;
+      margin-bottom: 40px;
+    }
+    
+    .chapter-end-inner {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .chapter-end-line {
+      width: 30px;
+      height: 2px;
+      border-radius: 2px;
+    }
+    
+    .chapter-end-line.rose {
+      background: #E8D5C4;
+    }
+    
+    .chapter-end-line.green {
+      background: #D4E0D9;
+    }
+    
+    .chapter-end p {
+      font-size: 0.8rem;
+      letter-spacing: 3px;
+      font-weight: 700;
+    }
+    
+    .chapter-end p.rose {
+      color: #C4B5A5;
+    }
+    
+    .chapter-end p.green {
+      color: #9CAFAA;
+    }
+    
+    .nav-buttons {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+    
+    /* Transition */
+    .transition {
+      height: 160px;
+      background: #FDF8F3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .transition-dots {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      animation: gentleBounce 3s ease-in-out infinite;
+    }
+    
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      opacity: 0.5;
+    }
+    
+    .dot.rose {
+      background: #D4A5A5;
+    }
+    
+    .dot.green {
+      background: #9CAFAA;
+    }
+    
+    .dot.blue {
+      background: #B8C5D6;
+    }
+    
+    /* Footer */
+    .footer {
+      background: #FDF8F3;
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid #F0EAE3;
+    }
+    
+    .footer-title {
+      color: #C4B5A5;
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      margin: 0;
+      font-weight: 600;
+    }
+    
+    .footer-sub {
+      color: #D4A5A5;
+      font-size: 0.75rem;
+      margin-top: 8px;
+    }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #FDF8F3;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #E8D5C4;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #D4A5A5;
+    }
+    
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0) translateX(0); }
+      25% { transform: translateY(-15px) translateX(5px); }
+      50% { transform: translateY(-8px) translateX(-5px); }
+      75% { transform: translateY(-20px) translateX(3px); }
+    }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+    
+    @keyframes drift {
+      0% { transform: translateX(-20px); }
+      100% { transform: translateX(20px); }
+    }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes gentleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    
+    /* Reveal Animation Class */
+    .reveal {
+      opacity: 0;
+    }
+    
+    .reveal.visible {
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    /* Decorative Background */
+    .deco-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="book-root">
+    
+    <!-- Floating Decorative Elements -->
+    <div class="deco-bg">
+      <div class="float-el" style="top:8%;left:10%;width:40px;height:40px;background:#E8D5C4;border-radius:50%;opacity:0.4;animation:float 8s ease-in-out infinite;"></div>
+      <div class="float-el" style="top:15%;right:15%;width:25px;height:25px;background:#D4A5A5;border-radius:50%;opacity:0.3;animation:float 6s ease-in-out infinite 1s;"></div>
+      <div class="float-el" style="top:35%;left:5%;width:30px;height:30px;background:#9CAFAA;border-radius:50%;opacity:0.3;animation:float 10s ease-in-out infinite 0.5s;"></div>
+      <div class="float-el" style="top:50%;right:8%;width:20px;height:20px;background:#C9B8D9;border-radius:50%;opacity:0.35;animation:float 7s ease-in-out infinite 2s;"></div>
+      <div class="float-el" style="top:70%;left:12%;width:35px;height:35px;background:#B8C5D6;border-radius:50%;opacity:0.25;animation:float 9s ease-in-out infinite 1.5s;"></div>
+      <div class="float-el" style="top:85%;right:20%;width:28px;height:28px;background:#E8D5C4;border-radius:50%;opacity:0.3;animation:float 8s ease-in-out infinite 0.8s;"></div>
+      
+      <!-- Stars -->
+      <svg class="float-el" style="top:12%;left:85%;opacity:0.3;animation:twinkle 4s ease-in-out infinite;" width="20" height="20" viewBox="0 0 24 24" fill="#D4A5A5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg class="float-el" style="top:40%;left:92%;opacity:0.25;animation:twinkle 5s ease-in-out infinite 1s;" width="16" height="16" viewBox="0 0 24 24" fill="#9CAFAA"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg class="float-el" style="top:65%;left:3%;opacity:0.3;animation:twinkle 6s ease-in-out infinite 2s;" width="18" height="18" viewBox="0 0 24 24" fill="#C9B8D9"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      <svg class="float-el" style="top:88%;left:75%;opacity:0.25;animation:twinkle 4.5s ease-in-out infinite 0.5s;" width="22" height="22" viewBox="0 0 24 24" fill="#B8C5D6"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+      
+      <!-- Clouds -->
+      <svg class="float-el" style="top:20%;left:3%;opacity:0.15;animation:drift 20s linear infinite;" width="80" height="40" viewBox="0 0 100 50" fill="#D4A5A5"><ellipse cx="30" cy="35" rx="25" ry="15"/><ellipse cx="55" cy="30" rx="30" ry="20"/><ellipse cx="75" cy="35" rx="20" ry="12"/></svg>
+      <svg class="float-el" style="top:60%;right:2%;opacity:0.12;animation:drift 25s linear infinite reverse;" width="70" height="35" viewBox="0 0 100 50" fill="#9CAFAA"><ellipse cx="30" cy="35" rx="25" ry="15"/><ellipse cx="55" cy="30" rx="30" ry="20"/><ellipse cx="75" cy="35" rx="20" ry="12"/></svg>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progress"></div>
+    </div>
+    
+    <!-- Bottom Floating Nav -->
+    <div class="bottom-nav">
+      <button onclick="scrollToSection('hero')" class="nav-pill active" data-target="hero">🏠</button>
+      <button onclick="scrollToSection('bab1')" class="nav-pill" data-target="bab1">Bab 1</button>
+      <button onclick="scrollToSection('bab2')" class="nav-pill" data-target="bab2">Bab 2</button>
+    </div>
+    
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+      <div class="hero-content">
+        <!-- Cute Icon -->
+        <div style="margin-bottom:24px;animation:gentleBounce 3s ease-in-out infinite;">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+            <circle cx="32" cy="32" r="30" fill="#F0EAE3" stroke="#D4A5A5" stroke-width="2"/>
+            <circle cx="22" cy="26" r="4" fill="#4A4A4A"/>
+            <circle cx="42" cy="26" r="4" fill="#4A4A4A"/>
+            <path d="M24 38 Q32 46 40 38" stroke="#D4A5A5" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <circle cx="32" cy="18" r="3" fill="#D4A5A5" opacity="0.5"/>
+            <circle cx="14" cy="32" r="2" fill="#9CAFAA" opacity="0.4"/>
+            <circle cx="50" cy="32" r="2" fill="#C9B8D9" opacity="0.4"/>
+          </svg>
+        </div>
+        
+        <div class="badge">
+          <span>BUKU RENUNGAN</span>
+        </div>
+        
+        <h1>Perjalanan<br>Menuju Keyakinan</h1>
+        <p>Renungan tentang Tuhan, Kebebasan, dan Kehambaan ✨</p>
+        
+        <button class="btn-pink" onclick="scrollToSection('bab1')">Mulai Membaca 🌙</button>
+      </div>
+      
+      <div class="scroll-indicator">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#C9B8D9" stroke-width="2" stroke-linecap="round">
+          <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+        </svg>
+      </div>
+    </section>
+    
+    <!-- Bab 1 -->
+    <section id="bab1" class="chapter">
+      <div class="content-wrapper">
+        
+        <div class="chapter-header reveal">
+          <div class="chapter-badge brown">
+            <span>BAB PERTAMA</span>
+          </div>
+          <h2 class="chapter-title">Asal Mula Manusia<br>Berpikir tentang Tuhan</h2>
+          <div style="width:50px;height:4px;background:#D4A5A5;margin:24px auto;border-radius:4px;"></div>
+        </div>
+        
+        <div class="content-card reveal" style="border:1px solid rgba(212,165,165,0.15);">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <div class="card-icon rose">
+              <span style="font-size:1.1rem;">💭</span>
+            </div>
+            <p>Sejak dahulu, Tuhan sering kali diperdebatkan keberadaan-Nya. Tapi, <em style="color:#D4A5A5;font-weight:700;">dari mana asal mula manusia berpikir bahwa adanya zat di luar universal?</em></p>
+          </div>
+        </div>
+        
+        <div class="content-card reveal" style="border:1px solid rgba(156,175,170,0.15);">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <div class="card-icon sage">
+              <span style="font-size:1.1rem;">🌍</span>
+            </div>
+            <p>Dalam banyak peradaban, manusia menunjukkan kecenderungan untuk mempercayai adanya kekuatan yang melampaui dirinya sendiri, karena manusia adalah makhluk yang haus akan makna kehidupan, dan satu-satunya makhluk yang mempertimbangkan kehidupan menurut moral serta kebenaran. Dari masa ke masa manusia akan selalu mempertanyakan makna keberadaan.</p>
+          </div>
+        </div>
+        
+        <div class="reveal">
+          <div class="pull-quote">
+            <div style="position:absolute;top:-10px;right:-10px;width:60px;height:60px;background:#D4A5A5;opacity:0.15;border-radius:50%;"></div>
+            <div style="position:absolute;bottom:-15px;left:-15px;width:50px;height:50px;background:#9CAFAA;opacity:0.15;border-radius:50%;"></div>
+            <div style="font-size:2.5rem;margin-bottom:8px;opacity:0.6;">❝</div>
+            <p>Mengapa semua ini ada<br>dan dari mana asalnya?</p>
+            <div style="font-size:2.5rem;margin-top:8px;opacity:0.6;">❞</div>
+          </div>
+        </div>
+        
+        <div class="content-card reveal" style="border:1px solid rgba(184,197,214,0.15);">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <div class="card-icon blue">
+              <span style="font-size:1.1rem;">🔍</span>
+            </div>
+            <p>Oleh karena itu, di tengah segala ketidakpastian manusia terus mencari jawaban dari mana segala sesuatu itu berasal, akan tetapi nalar kita terbatas. Maka dari sinilah kita mulai mempercayai adanya suatu keberadaan yang tidak bergantung pada apapun dan tidak berasal dari manapun — atau yang disebut dengan <strong>'keberadaan niscaya'</strong>, sebagai sebuah pegangan di tengah kekacauan serta ketidakpastian dunia.</p>
+          </div>
+        </div>
+        
+        <div class="reveal">
+          <div class="question-block rose">
+            <div class="question-tag rose">PERTANYAAN MENDALAM 🤔</div>
+            <p>Lalu mengapa Tuhan tidak menunjukkan keagungan-Nya secara langsung kepada manusia? Mengapa manusia justru hidup di tengah berbagai pertanyaan tentang diri, kehidupan, dan keberadaan-Nya?</p>
+          </div>
+        </div>
+        
+        <div class="content-card reveal" style="border:1px solid rgba(201,184,217,0.15);">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <div class="card-icon lavender">
+              <span style="font-size:1.1rem;">🕊️</span>
+            </div>
+            <p>Barangkali, justru di situlah letak kemerdekaan manusia. Kita diberi kemampuan untuk berpikir, mempertanyakan, memilih, dan terus mencari. Agar kita dapat memahami mengapa kita memilih jawaban tersebut.</p>
+          </div>
+        </div>
+        
+        <div class="reveal">
+          <div class="insight-card green-gradient">
+            <div style="position:absolute;top:-20px;right:-20px;width:80px;height:80px;background:#fff;opacity:0.1;border-radius:50%;"></div>
+            <div style="position:absolute;bottom:-10px;left:-10px;width:50px;height:50px;background:#fff;opacity:0.08;border-radius:50%;"></div>
+            <div class="insight-label">
+              <span style="font-size:1.5rem;">💡</span>
+              <span>WAWASAN</span>
+            </div>
+            <p>Keraguan bukanlah lawan dari keimanan, melainkan <strong>bagian dari proses menuju keyakinan</strong>. Keraguan dapat mendorong seseorang untuk terus mencari, memahami, dan mengenali kepada siapa sebenarnya ia bertuhan.</p>
+          </div>
+        </div>
+        
+        <div class="content-card reveal" style="border:1px solid rgba(212,165,165,0.15);">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <div class="card-icon rose">
+              <span style="font-size:1.1rem;">🌱</span>
+            </div>
+            <p>Maka dari itu bertuhan bukan sekadar menerima sebuah keyakinan sebagai warisan atau identitas, melainkan sebuah keputusan yang lahir dari kesadaran hasil perenungan yang mendalam.</p>
+          </div>
+        </div>
+        
+        <div class="reveal">
+          <div class="reflection rose">
+            <div class="reflection-tag rose"><span>REFLEKSI</span></div>
+            <p>"Saya memilih untuk percaya bukan karena saya telah membuktikan keberadaan Tuhan secara mutlak, melainkan karena saya menyadari bahwa saya membutuhkan-Nya."</p>
+          </div>
+        </div>
+        
+        <div class="chapter-end reveal">
+          <div class="chapter-end-inner">
+            <div class="chapter-end-line rose"></div>
+            <p class="rose">AKHIR BAB PERTAMA 🌸</p>
+            <div class="chapter-end-line rose"></div>
+          </div>
+        </div>
+        
+        <div class="nav-buttons reveal">
+          <button class="btn-green" onclick="scrollToSection('bab2')">Lanjut ke Bab 2 ✨</button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Transition -->
+    <div class="transition">
+      <div class="transition-dots">
+        <div class="dot rose"></div>
+        <div class="dot green"></div>
+        <div class="dot blue"></div>
+      </div>
+    </div>
+    
+    <!-- Bab 2 -->
+    <section id="bab2" class="chapter">
+      <div class="content-wrapper">
+        
+        <div class="chapter-header reveal">
+          <div class="chapter-badge green">
+            <span>BAB KEDUA</span>
+          </div>
+          <h2 class="chapter-title">Mengenai Agama<br>dan Ketuhanan</h2>
+          <div style="width:50px;height:4px;background:#9CAFAA;margin:24px auto;border-radius:4px;"></div>
+        </div>
+        
+        <div class="content-card reveal" style="border:1px solid rgba(156,175,170,0.15);">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <div class="card-icon sage">
+              <span style="font-size:1.1rem;">🤲</span>
+            </div>
+            <p><em style="color:#9CAFAA;font-weight:700;font-size:1.15rem;">Sejauh mana kita dimiliki oleh Tuhan?</em></p>
+          </div>
+        </div>
+        
+        <div class="content-card reveal" style="border:1px solid rgba(212,165,165,0.15);">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <div class="card-icon rose">
+              <span style="font-size:1.1rem;">📖</span>
+            </div>
+            <p>Tuhan tidak hanya didefinisikan sebagai pencipta tetapi juga dapat didefinisikan sebagai <strong>pemilik</strong>. Definisi ini sering kali membutuhkan perenungan yang lebih dalam, karena mengakui Tuhan sebagai Pencipta jauh lebih mudah daripada mengakui-Nya sebagai Pemilik.</p>
+          </div>
+        </div>
+        
+        <div class="reveal">
+          <div class="contrast-cards">
+            <div class="card card-light">
+              <div class="card-icon-box light">
+                <span style="font-size:1.5rem;">☁️</span>
+              </div>
+              <p class="card-label rose">MUDAH</p>
+              <p>Mengakui Tuhan sebagai <strong style="color:#5C5C5C;">Pencipta</strong></p>
+            </div>
+            <div class="card card-gradient">
+              <div class="card-icon-box gradient">
+                <span style="font-size:1.5rem;">🌟</span>
+              </div>
+              <p class="card-label white">LEBIH DALAM</p>
+              <p>Mengakui Tuhan sebagai <strong>Pemilik</strong></p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="content-card reveal" style="border:1px solid rgba(184,197,214,0.15);">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <div class="card-icon blue">
+              <span style="font-size:1.1rem;">🪞</span>
+            </div>
+            <p>Karena kita hanya mengakui dari mana kita berasal tanpa mengakui kepada siapa diri kita sebenarnya dimiliki. Dan dari sinilah makna seorang hamba mulai dipertanyakan.</p>
+          </div>
+        </div>
+        
+        <div class="reveal">
+          <div class="question-block green center">
+            <div class="question-tag green">RENUNGAN 🌿</div>
+            <p>Apakah selama ini kita hanya mengakui Tuhan sebagai asal mula keberadaan, atau benar-benar menyadari bahwa seluruh diri kita adalah milik-Nya?</p>
+          </div>
+        </div>
+        
+        <div class="content-card reveal" style="border:1px solid rgba(201,184,217,0.15);">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <div class="card-icon lavender">
+              <span style="font-size:1.1rem;">🌙</span>
+            </div>
+            <p>Jika Tuhan adalah pemilik, lalu sejauh mana kita benar-benar memiliki diri kita? Barangkali, pertanyaan itu akan menemukan ruangnya pada perenungan berikutnya.</p>
+          </div>
+        </div>
+        
+        <div class="reveal">
+          <div class="key-insight">
+            <div style="position:absolute;top:-15px;right:-15px;width:60px;height:60px;background:#D4A5A5;opacity:0.08;border-radius:50%;"></div>
+            <div class="key-insight-header">
+              <span style="font-size:1.5rem;">🔐</span>
+              <span>WAWASAN KUNCI</span>
+            </div>
+            <p>Ketika kita bertuhan, itu berarti kita secara sadar <strong>memilih untuk membatasi kebebasan kita</strong> agar tetap selaras dengan kehendak Tuhan — sebab kita memilih untuk menyadari dan menerima kehambaan.</p>
+          </div>
+        </div>
+        
+        <div class="content-card reveal" style="border:1px solid rgba(212,165,165,0.15);">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <div class="card-icon rose">
+              <span style="font-size:1.1rem;">🎯</span>
+            </div>
+            <p>Karena salah satu tugas seorang hamba ialah meminta skenario terbaik dari Sang Perencana, dan mencari tahu mana yang sebenarnya terbaik dari-Nya.</p>
+          </div>
+        </div>
+        
+        <div class="reveal">
+          <div class="insight-card purple-gradient">
+            <div style="position:absolute;top:16px;right:16px;opacity:0.15;">
+              <svg width="50" height="50" viewBox="0 0 24 24" fill="#fff"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            </div>
+            <div class="insight-label">
+              <span style="font-size:1.5rem;">📜</span>
+              <span>HIKMAH AGAMA</span>
+            </div>
+            <p>Salah satu hikmah terbaik dari agama adalah petunjuk yang Tuhan berikan agar hamba-Nya dapat mengetahui cara beribadah dan cara mendekatkan diri dengan akurat, tanpa menebak apa yang Tuhan-Nya inginkan.</p>
+          </div>
+        </div>
+        
+        <div class="content-card reveal" style="border:1px solid rgba(156,175,170,0.15);">
+          <div style="display:flex;align-items:flex-start;gap:16px;">
+            <div class="card-icon sage">
+              <span style="font-size:1.1rem;">🧭</span>
+            </div>
+            <p>Memikirkan definisi Tuhan, alasan untuk bertuhan, dan kepada siapa kita bertuhan harusnya berada di <strong>tahap awal orang beragama</strong>, karena agama adalah cara kita dimiliki oleh Tuhan.</p>
+          </div>
+        </div>
+        
+        <div class="reveal">
+          <div class="reflection green">
+            <div class="reflection-tag green"><span>PENUTUP</span></div>
+            <p>"Beragama dan bertuhan itu hal yang lekat namun berbeda."</p>
+          </div>
+        </div>
+        
+        <div class="chapter-end reveal">
+          <div class="chapter-end-inner">
+            <div class="chapter-end-line green"></div>
+            <p class="green">AKHIR BAB KEDUA 🌿</p>
+            <div class="chapter-end-line green"></div>
+          </div>
+        </div>
+        
+        <div class="nav-buttons reveal">
+          <button class="btn-cream" onclick="scrollToSection('hero')">Kembali ke Awal 🏠</button>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Footer -->
+    <div class="footer">
+      <p class="footer-title">— PERJALANAN MENUJU KEYAKINAN —</p>
+      <p class="footer-sub">Dibuat dengan 💖 untuk remaja yang merenung</p>
+    </div>
+    
+  </div>
+  
+  <script>
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Intersection Observer for reveal animations
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08 });
+    
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+    
+    // Progress bar and nav pills
+    const bookRoot = document.getElementById('book-root');
+    const progressBar = document.getElementById('progress');
+    const navPills = document.querySelectorAll('.nav-pill');
+    const sections = ['hero', 'bab1', 'bab2'];
+    
+    bookRoot.addEventListener('scroll', () => {
+      const scrollTop = bookRoot.scrollTop;
+      const scrollHeight = bookRoot.scrollHeight - bookRoot.clientHeight;
+      const progress = (scrollTop / scrollHeight) * 100;
+      progressBar.style.width = progress + '%';
+      
+      sections.forEach((secId, idx) => {
+        const sec = document.getElementById(secId);
+        const rect = sec.getBoundingClientRect();
+        const rootRect = bookRoot.getBoundingClientRect();
+        const secTop = rect.top - rootRect.top;
+        const secBottom = rect.bottom - rootRect.top;
+        
+        if (secTop <= 200 && secBottom > 200) {
+          navPills.forEach(p => p.classList.remove('active'));
+          navPills[idx].classList.add('active');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
